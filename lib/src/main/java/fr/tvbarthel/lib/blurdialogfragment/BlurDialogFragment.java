@@ -86,7 +86,7 @@ public abstract class BlurDialogFragment extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mBlurEngine.onResume(getRetainInstance());
+        mBlurEngine.onResume();
     }
 
 
@@ -98,8 +98,8 @@ public abstract class BlurDialogFragment extends DialogFragment {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mBlurEngine.onDestroy();
+        super.onDestroy();
     }
 
     @Override

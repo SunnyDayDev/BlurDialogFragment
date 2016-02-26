@@ -135,7 +135,6 @@ public class BlurDialogEngine {
      */
     private boolean mUseRenderScript;
 
-
     /**
      * Constructor.
      *
@@ -148,11 +147,9 @@ public class BlurDialogEngine {
 
     /**
      * Resume the engine.
-     *
-     * @param retainedInstance use getRetainInstance.
      */
-    public void onResume(boolean retainedInstance) {
-        if (mBlurredBackgroundView == null || retainedInstance) {
+    public void onResume() {
+        if (mBlurredBackgroundView == null) {
             mBluringTask = new BlurAsyncTask();
             mBluringTask.execute();
         }
@@ -202,6 +199,7 @@ public class BlurDialogEngine {
         if (mBluringTask != null) {
             mBluringTask.cancel(true);
         }
+        removeBlurredView();
         mBluringTask = null;
         mHoldingActivity = null;
     }
@@ -532,10 +530,10 @@ public class BlurDialogEngine {
             mBackgroundView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 @Override
                 public boolean onPreDraw() {
+                    mBackgroundView.getViewTreeObserver().removeOnPreDrawListener(this);
                     mBackground = Bitmap.createBitmap(mBackgroundView.getWidth(), mBackgroundView.getHeight(), Bitmap.Config.ARGB_8888);
                     Canvas canvas = new Canvas(mBackground);
                     mBackgroundView.draw(canvas);
-                    mBackgroundView.getViewTreeObserver().removeOnPreDrawListener(this);
                     BlurAsyncTask.super.execute();
                     return true;
                 }
@@ -559,6 +557,7 @@ public class BlurDialogEngine {
         @SuppressLint("NewApi")
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if (isCancelled()) return;
 
             mHoldingActivity.getWindow().addContentView(
                 mBlurredBackgroundView,

@@ -84,7 +84,7 @@ public abstract class SupportBlurDialogFragment extends DialogFragment {
     @Override
     public void onResume() {
         super.onResume();
-        mBlurEngine.onResume(getRetainInstance());
+        mBlurEngine.onResume();
     }
 
     @Override
@@ -95,8 +95,8 @@ public abstract class SupportBlurDialogFragment extends DialogFragment {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         mBlurEngine.onDestroy();
+        super.onDestroy();
     }
 
     @Override
